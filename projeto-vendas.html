@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard de Vendas — Pedro Ivo Gomes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --surface: #111318;
+      --surface2: #181c23;
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.18);
+      --text: #f0ede8;
+      --muted: #8a8f9a;
+      --accent: #3d8ef0;
+      --accent2: #1fcfad;
+      --accent3: #f0a53d;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --mono: 'DM Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem; height: 64px;
+      background: rgba(10,12,16,0.85); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--text); }
+    .nav-back svg { width: 16px; height: 16px; }
+    .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent2); }
+
+    .hero {
+      padding: 8rem 2.5rem 4rem;
+      max-width: 860px; margin: 0 auto;
+    }
+    .project-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 12px; color: var(--accent);
+      border: 1px solid rgba(61,142,240,0.3);
+      padding: 5px 14px; border-radius: 100px; margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: 1.1; letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    h1 em { font-style: italic; color: var(--muted); }
+    .lead {
+      font-size: 1.1rem; color: var(--muted); line-height: 1.8;
+      max-width: 660px; margin-bottom: 2rem;
+    }
+    .meta-row {
+      display: flex; gap: 2rem; flex-wrap: wrap; padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+    .meta-item { }
+    .meta-key { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+    .meta-val { font-size: 14px; font-weight: 500; }
+
+    .content { max-width: 860px; margin: 0 auto; padding: 0 2.5rem 6rem; }
+    .content h2 { font-family: var(--serif); font-size: 1.75rem; margin: 2.5rem 0 1rem; }
+    .content p { color: var(--muted); line-height: 1.85; margin-bottom: 1rem; }
+    .content p strong { color: var(--text); }
+    .content ul { color: var(--muted); padding-left: 1.5rem; margin-bottom: 1rem; }
+    .content ul li { margin-bottom: 6px; line-height: 1.7; }
+
+    .code-block {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.25rem 1.5rem;
+      font-family: var(--mono); font-size: 13px; line-height: 1.7;
+      color: var(--muted); overflow-x: auto; margin: 1.5rem 0;
+    }
+    .code-block .kw { color: var(--accent); }
+    .code-block .fn { color: var(--accent2); }
+    .code-block .str { color: var(--accent3); }
+    .code-block .cm { color: #4a5060; }
+
+    .tools-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 1rem 0 2rem; }
+    .tool-badge {
+      font-family: var(--mono); font-size: 12px;
+      padding: 6px 14px; border-radius: 6px;
+      border: 1px solid var(--border); color: var(--muted);
+    }
+    .tool-badge.accent { border-color: rgba(61,142,240,0.4); color: var(--accent); background: rgba(61,142,240,0.06); }
+    .tool-badge.green { border-color: rgba(31,207,173,0.4); color: var(--accent2); background: rgba(31,207,173,0.06); }
+    .tool-badge.amber { border-color: rgba(240,165,61,0.4); color: var(--accent3); background: rgba(240,165,61,0.06); }
+
+    .visual-placeholder {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; height: 280px;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px; margin: 2rem 0;
+      color: var(--muted);
+    }
+    .visual-placeholder span { font-size: 2.5rem; }
+    .visual-placeholder p { font-size: 13px; font-family: var(--mono); }
+
+    .next-project {
+      margin-top: 4rem; padding: 2rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; display: flex;
+      align-items: center; justify-content: space-between;
+      text-decoration: none; color: var(--text);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .next-project:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .np-label { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+    .np-title { font-weight: 500; font-size: 16px; }
+    footer {
+      border-top: 1px solid var(--border); padding: 1.5rem 2.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-text { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-back">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>
+    Voltar ao portfólio
+  </a>
+  <span class="nav-logo">pedro.ivo.gomes</span>
+</nav>
+
+<div class="hero">
+  <div class="project-tag">Power BI · Visualização</div>
+  <h1>Dashboard de <em>Vendas</em></h1>
+  <p class="lead">
+    Painel interativo com acompanhamento de metas, análise de sazonalidade e
+    segmentação por região e produto para tomada de decisão em tempo real.
+  </p>
+  <div class="meta-row">
+    <div class="meta-item">
+      <div class="meta-key">Tipo</div>
+      <div class="meta-val">Dashboard BI</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-key">Ferramentas</div>
+      <div class="meta-val">Power BI · DAX · SQL</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-key">Área</div>
+      <div class="meta-val">Vendas / Comercial</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-key">Status</div>
+      <div class="meta-val" style="color:var(--accent2);">✓ Concluído</div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <h2>Visão geral</h2>
+  <p>
+    Este projeto consiste em um <strong>dashboard interativo de vendas</strong> desenvolvido no
+    Power BI com integração direta a uma base de dados SQL Server. O objetivo foi
+    centralizar os dados de vendas de múltiplas filiais em um único painel, permitindo
+    análise em diferentes granularidades.
+  </p>
+
+  <div class="tools-row">
+    <span class="tool-badge accent">Power BI Desktop</span>
+    <span class="tool-badge accent">DAX</span>
+    <span class="tool-badge accent">Power Query (M)</span>
+    <span class="tool-badge green">SQL Server</span>
+    <span class="tool-badge amber">Excel</span>
+  </div>
+
+  <div class="visual-placeholder">
+    <span>📊</span>
+    <p>[ Insira aqui o print do seu dashboard ]</p>
+  </div>
+
+  <h2>O problema</h2>
+  <p>
+    A empresa não possuía visibilidade centralizada de suas vendas. Os dados estavam
+    distribuídos em planilhas Excel por filial, dificultando o acompanhamento das
+    metas e a identificação de tendências sazonais.
+  </p>
+
+  <h2>Solução desenvolvida</h2>
+  <p>
+    Desenvolvi um pipeline de dados que extraía, transformava e carregava os dados
+    consolidados para o Power BI. O dashboard incluiu:
+  </p>
+  <ul>
+    <li>Acompanhamento de meta mensal com gauge e indicadores de variação</li>
+    <li>Análise de sazonalidade com visualização por mês/trimestre/ano</li>
+    <li>Mapa de calor por região com drill-through para filial</li>
+    <li>Ranking de produtos por receita, ticket médio e margem</li>
+    <li>Filtros dinâmicos com slicers sincronizados</li>
+  </ul>
+
+  <h2>Exemplo de medida DAX</h2>
+  <div class="code-block">
+<span class="cm">-- Variação vs Meta (YTD)</span>
+<span class="fn">Var_Meta_YTD</span> =
+<span class="kw">VAR</span> VendasYTD =
+    <span class="fn">CALCULATE</span>(
+        <span class="fn">SUM</span>(Vendas[Valor]),
+        <span class="fn">DATESYTD</span>(Calendario[Data])
+    )
+<span class="kw">VAR</span> MetaYTD =
+    <span class="fn">CALCULATE</span>(
+        <span class="fn">SUM</span>(Metas[ValorMeta]),
+        <span class="fn">DATESYTD</span>(Calendario[Data])
+    )
+<span class="kw">RETURN</span>
+    <span class="fn">DIVIDE</span>(VendasYTD - MetaYTD, MetaYTD, 0)
+  </div>
+
+  <h2>Resultados</h2>
+  <p>
+    Com o painel em produção, a equipe de gestão passou a tomar decisões com base em
+    dados atualizados diariamente, reduzindo em <strong>70% o tempo gasto</strong> na
+    consolidação manual de relatórios.
+  </p>
+
+  <a href="projeto-financeiro.html" class="next-project">
+    <div>
+      <div class="np-label">Próximo projeto</div>
+      <div class="np-title">Análise Financeira com Python →</div>
+    </div>
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+  </a>
+
+</div>
+
+<footer>
+  <span class="footer-text">Pedro Ivo Gomes</span>
+  <a href="../index.html" style="font-size:13px;color:var(--muted);text-decoration:none;">← Voltar ao portfólio</a>
+</footer>
+
+</body>
+</html>
